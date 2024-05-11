@@ -1,2 +1,2 @@
 # Business_Game
-This project is based on the old board-based game.(Indian version Business Game)
+This project is a reference/built from the india of the old board based business game(specifically played india).
