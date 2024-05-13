@@ -2,138 +2,116 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    //private Banker banker_UI;
-    //private Player player1_UI;
-    //private Player player2_UI;
-    //private Player player3_UI;
-    //private Player player4_UI;
-
-    private TMPro.TextMeshProUGUI banker_UI;
-    private TMPro.TextMeshProUGUI player1_UI;
-    private TMPro.TextMeshProUGUI player2_UI;
-    private TMPro.TextMeshProUGUI player3_UI;
-    private TMPro.TextMeshProUGUI player4_UI;
+    private TMPro.TextMeshProUGUI banker_Balance;
+    private TMPro.TextMeshProUGUI player1_Balance;
+    private TMPro.TextMeshProUGUI player2_Balance;
+    private TMPro.TextMeshProUGUI player3_Balance;
+    private TMPro.TextMeshProUGUI player4_Balance;
+    private TMPro.TextMeshProUGUI diceNumber;
 
     private void Awake()
     {
-        Transform temporary = null;
-
-        if(this.transform.childCount != 5)
+        if(this.transform.childCount != 6)
         {
             Debug.LogError("Did you setup the players and banker UI correctly?");
             Utilities.QuitPlayModeInEditor();
         }
 
-        // Banker Ref
-        temporary = this.transform.GetChild(0);
+        SetupBalance(0, ref banker_Balance);
+        SetupBalance(1, ref player1_Balance);
+        SetupBalance(2, ref player2_Balance);
+        SetupBalance(3, ref player3_Balance);
+        SetupBalance(4, ref player4_Balance);
+        SetupBalance(5, ref diceNumber);
 
-        if (temporary.childCount != 2)
-        {
-            Debug.LogError("Did you setup the banker UI correctly?");
-            Utilities.QuitPlayModeInEditor();
-        }
+        SetupPlayerName(1);
+        SetupPlayerName(2);
+        SetupPlayerName(3);
+        SetupPlayerName(4);
 
-        temporary = temporary.GetChild(1);
+        SetupPlayerBackground(1);
+        SetupPlayerBackground(2);
+        SetupPlayerBackground(3);
+        SetupPlayerBackground(4);
 
-        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out banker_UI))
-        {
-            Debug.LogError("Error setting up banker UI.");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        // Player 1 Ref
-        temporary = this.transform.GetChild(1);
-
-        if (temporary.childCount != 2)
-        {
-            Debug.LogError("Did you setup the Player 1 UI correctly?");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        temporary = temporary.GetChild(1);
-
-        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out player1_UI))
-        {
-            Debug.LogError("Error setting up Player 1 UI.");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        // Player 2 Ref
-        temporary = this.transform.GetChild(2);
-
-        if (temporary.childCount != 2)
-        {
-            Debug.LogError("Did you setup the Player 2 UI correctly?");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        temporary = temporary.GetChild(1);
-
-        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out player2_UI))
-        {
-            Debug.LogError("Error setting up Player 2 UI.");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        // Player 3 Ref
-        temporary = this.transform.GetChild(3);
-
-        if (temporary.childCount != 2)
-        {
-            Debug.LogError("Did you setup the Player 3 UI correctly?");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        temporary = temporary.GetChild(1);
-
-        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out player3_UI))
-        {
-            Debug.LogError("Error setting up Player 3 UI.");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        // Player 4 Ref
-        temporary = this.transform.GetChild(4);
-
-        if (temporary.childCount != 2)
-        {
-            Debug.LogError("Did you setup the Player 4 UI correctly?");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        temporary = temporary.GetChild(1);
-
-        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out player4_UI))
-        {
-            Debug.LogError("Error setting up Player 4 UI.");
-            Utilities.QuitPlayModeInEditor();
-        }
-
-        Player.MoneyChanged += OnPlayersMoneyChange;
-        Banker.MoneyChanged += OnBankersMoneyChange;
+        Player.OnPlayerMoneyChanged += OnPlayersMoneyChanged;
+        Banker.OnBankerMoneyChanged += OnBankersMoneyChanged;
+        Dice.OnDiceRolled += OnDiceRolled;
     }
 
     private void OnDestroy()
     {
-        Player.MoneyChanged -= OnPlayersMoneyChange;
-        Banker.MoneyChanged -= OnBankersMoneyChange;
+        Player.OnPlayerMoneyChanged -= OnPlayersMoneyChanged;
+        Banker.OnBankerMoneyChanged -= OnBankersMoneyChanged;
+        Dice.OnDiceRolled -= OnDiceRolled;
     }
 
-    private void OnPlayersMoneyChange(System.Int64 updatedMoney, ushort playerID)
+    private void SetupPlayerBackground(int playerIndex)
+    {
+        Transform temporary = this.transform.GetChild(playerIndex);
+
+        if (!temporary.TryGetComponent<UnityEngine.UI.Image>(out UnityEngine.UI.Image output))
+        {
+            Debug.LogError("Error setting up the Background.");
+            Utilities.QuitPlayModeInEditor();
+        }
+
+        if(!temporary.TryGetComponent<Player>(out Player player))
+        {
+            Debug.LogError("Error getting player script.");
+            Utilities.QuitPlayModeInEditor();
+        }
+
+        output.color = player.GetPlayerColor();
+    }
+
+    private void SetupPlayerName(int childIndex)
+    {
+        Transform temporary = this.transform.GetChild(childIndex).GetChild(0);
+
+        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out TMPro.TextMeshProUGUI output))
+        {
+            Debug.LogError("Error setting up the Player Name.");
+            Utilities.QuitPlayModeInEditor();
+        }
+
+        output.text = "Player: " + childIndex;
+    }
+
+    private void SetupBalance(int childIndex, ref TMPro.TextMeshProUGUI output)
+    {
+        Transform temporary = transform.GetChild(childIndex);
+
+        if (temporary.childCount < 2)
+        {
+            Debug.LogError("Did you setup the UI correctly?");
+            Utilities.QuitPlayModeInEditor();
+        }
+
+        temporary = temporary.GetChild(1);
+
+        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out output))
+        {
+            Debug.LogError("Error setting up the UI.");
+            Utilities.QuitPlayModeInEditor();
+        }
+    }
+
+    private void OnPlayersMoneyChanged(System.Int64 updatedMoney, ushort playerID)
     {
         switch (playerID)
         {
             case 1:
-                FormatToIndianCurrencyAndPrint(player1_UI, updatedMoney);
+                FormatToIndianCurrencyAndPrint(player1_Balance, updatedMoney);
                 break;
             case 2:
-                FormatToIndianCurrencyAndPrint(player2_UI, updatedMoney);
+                FormatToIndianCurrencyAndPrint(player2_Balance, updatedMoney);
                 break;
             case 3:
-                FormatToIndianCurrencyAndPrint(player3_UI, updatedMoney);
+                FormatToIndianCurrencyAndPrint(player3_Balance, updatedMoney);
                 break;
             case 4:
-                FormatToIndianCurrencyAndPrint(player4_UI, updatedMoney);
+                FormatToIndianCurrencyAndPrint(player4_Balance, updatedMoney);
                 break;
             default:
                 Debug.LogError("Unhandled player ID: " + playerID);
@@ -142,12 +120,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnBankersMoneyChange(System.Int64 updatedMoney)
+    private void OnBankersMoneyChanged(System.Int64 updatedMoney)
     {
-        FormatToIndianCurrencyAndPrint(banker_UI, updatedMoney);
+        FormatToIndianCurrencyAndPrint(banker_Balance, updatedMoney);
     }
 
-    void FormatToIndianCurrencyAndPrint(TMPro.TMP_Text output, System.Int64 amount)
+    private void FormatToIndianCurrencyAndPrint(TMPro.TMP_Text output, System.Int64 amount)
     {
         string formattedString = amount.ToString();
 
@@ -157,5 +135,10 @@ public class UIManager : MonoBehaviour
         }
 
         output.text = "Balance: " + formattedString + " Rupees";
+    }
+
+    private void OnDiceRolled(int diceValue)
+    {
+        diceNumber.text = "Number: " + diceValue.ToString();
     }
 }

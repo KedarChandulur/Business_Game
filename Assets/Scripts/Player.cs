@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static System.Action<System.Int64, ushort> MoneyChanged;
+    [SerializeField]
+    private Color playerBG_Color;
+    public static System.Action<System.Int64, ushort> OnPlayerMoneyChanged;
     private readonly Account account = new Account();
     private const System.Int64 initialAmount = 150000000;
 
@@ -12,6 +14,11 @@ public class Player : MonoBehaviour
     void Start()
     {
         account.Initialize(initialAmount);
-        MoneyChanged?.Invoke(initialAmount, playerID);
+        OnPlayerMoneyChanged?.Invoke(initialAmount, playerID);
+    }
+
+    public Color GetPlayerColor()
+    {
+        return playerBG_Color;
     }
 }
