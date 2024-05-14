@@ -2,30 +2,14 @@ using UnityEngine;
 
 public class StartTile : Square
 {
-    public override void WhatToDo(uint diceValue)
+    private static readonly long startAmount = 250000;
+
+    public override void ProcessPlayer(int diceValue, Player player)
     {
         // Get Money.
-
-        //Type type = (Type)diceValue;
-
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        Debug.Log("Start crossed of 250000 amount given to the player.");
+        player.CreditAmount(startAmount);
+        GameManager.instance.GetBanker().DebitAmount(startAmount);
     }
 
     public override void SetType(uint index, uint objectID)

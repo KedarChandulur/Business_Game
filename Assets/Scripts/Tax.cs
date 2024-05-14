@@ -9,6 +9,8 @@ public class Tax : Square
         LuxuryTax,
     }
 
+    private static readonly long taxAmount = 200000;
+
     [SerializeField]
     private Type type;
 
@@ -25,30 +27,21 @@ public class Tax : Square
         base.squareName.text = type.ToString();
     }
 
-    public override void WhatToDo(uint diceValue)
+    public override void ProcessPlayer(int diceValue, Player player)
     {
-        // Pay Money.
-
-        //Type type = (Type)diceValue;
-
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        switch (type)
+        {
+            case Type.IncomeTax:
+            case Type.LuxuryTax:
+                Debug.Log("Tax of 200000 to the player.");
+                player.DebitAmount(taxAmount);
+                GameManager.instance.GetBanker().CreditAmount(taxAmount);
+                break;
+            case Type.Uninitialized:
+            default:
+                Debug.LogError("Something went wrong with Tax Tile.");
+                break;
+        }
     }
 
     public override void SetType(uint index, uint objectID)

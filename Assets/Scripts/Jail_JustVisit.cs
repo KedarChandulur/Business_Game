@@ -2,30 +2,21 @@ using UnityEngine;
 
 public class Jail_JustVisit : Square
 {
-    public override void WhatToDo(uint diceValue)
+    private static readonly long amount = 1000000;
+
+    private void Start()
     {
-        // Pay Money.
+        // Implement wait for 2/3 turns.
+        Debug.LogError("Wait not implemented for Jail.");
+    }
 
-        //Type type = (Type)diceValue;
+    public override void ProcessPlayer(int diceValue, Player player)
+    {
+        Debug.Log("Paying bank of 1000000 by the player.");
+        player.DebitAmount(amount);
+        GameManager.instance.GetBanker().CreditAmount(amount);
 
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        // Implement wait for 2/3 turns.
     }
 
     public override void SetType(uint index, uint objectID)
