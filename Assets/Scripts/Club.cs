@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Club : Square
 {
-    public override void WhatToDo(uint diceValue)
+    public override void ProcessPlayer(int diceValue, Player player)
     {
         // Pay Money.
 

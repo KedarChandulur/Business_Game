@@ -43,7 +43,7 @@ public class Property : Square
         base.squareName.text = type.ToString();
     }
 
-    public override void WhatToDo(uint diceValue)
+    public override void ProcessPlayer(int diceValue, Player player)
     {
         // Pay/Get Money depending on the player.
 

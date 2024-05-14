@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class Best : Square
 {
-    public override void WhatToDo(uint diceValue)
+    public override void ProcessPlayer(int diceValue, Player player)
     {
+        // If you own best, rent is Rs.1350
+        // Mortgage - 4750
+        
         // Get Money.
 
         //Type type = (Type)diceValue;
