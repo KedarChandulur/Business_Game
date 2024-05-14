@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         {
             currentPlayer = playerID;
 
-            players[playerID].ChangeState(new PlayerRollingDiceState(player));
+            player.ChangeState(new PlayerRollingDiceState(player));
         }
     }
 

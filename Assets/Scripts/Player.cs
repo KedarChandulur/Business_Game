@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public static System.Action<System.Int64, ushort> OnPlayerMoneyChanged;
 
     private readonly Account account = new Account();
-    private const System.Int64 initialAmount = 150000000;
+    private const System.Int64 initialAmount = 10000000;
 
     private int playerBoardPosition;
 
