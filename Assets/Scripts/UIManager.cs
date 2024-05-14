@@ -36,6 +36,10 @@ public class UIManager : MonoBehaviour
 
         Player.OnPlayerMoneyChanged += OnPlayersMoneyChanged;
         Banker.OnBankerMoneyChanged += OnBankersMoneyChanged;
+    }
+
+    private void Start()
+    {
         Dice.OnDiceRolled += OnDiceRolled;
     }
 
