@@ -4,10 +4,9 @@ public class Jail_JustVisit : Square
 {
     private static readonly long amount = 1000000;
 
-    private void Start()
+    private void Awake()
     {
-        // Implement wait for 2/3 turns.
-        Debug.LogError("Wait not implemented for Jail.");
+        base.Setup();
     }
 
     public override void ProcessPlayer(int diceValue, Player player)
@@ -16,14 +15,14 @@ public class Jail_JustVisit : Square
         player.DebitAmount(amount);
         GameManager.instance.GetBanker().CreditAmount(amount);
 
-        // Implement wait for 2/3 turns.
+        player.playerSpecificData.SetPlayerJailState(true);
     }
 
     public override void SetType(uint index, uint objectID)
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

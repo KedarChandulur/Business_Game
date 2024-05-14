@@ -48,7 +48,7 @@ public class Tax : Square
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

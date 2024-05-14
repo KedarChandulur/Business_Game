@@ -1,5 +1,43 @@
 using UnityEngine;
 
+public class PlayerSpecificData
+{
+    ushort turnsMissed = 0;
+    bool isInJail = false;
+
+    public bool IsInJail()
+    {
+        return isInJail;
+    }
+
+    public void SetPlayerJailState(bool _isInJail = true)
+    {
+        isInJail = _isInJail;
+
+        if(!isInJail)
+        {
+            turnsMissed = 0;
+        }
+    }
+    
+    public void UpdateTurnsMissedCount()
+    {
+        if(isInJail)
+        {
+            ++turnsMissed;
+
+            if(turnsMissed > 8)
+            {
+                this.SetPlayerJailState(false);
+            }
+        }
+        else
+        {
+            Debug.Log("Can't update count when not in jail.");
+        }
+    }
+}
+
 public class Player : MonoBehaviour
 {
     [SerializeField]
@@ -8,9 +46,11 @@ public class Player : MonoBehaviour
     public static System.Action<System.Int64, ushort> OnPlayerMoneyChanged;
 
     private readonly Account account = new Account();
-    private const System.Int64 initialAmount = 10000000;
+    private const System.Int64 initialAmount = 100000;
 
     private int playerBoardPosition;
+
+    public PlayerSpecificData playerSpecificData = new PlayerSpecificData();
 
     [SerializeField]
     private ushort playerID = 0;
@@ -21,6 +61,7 @@ public class Player : MonoBehaviour
     {
         currentState = new PlayerIdleState(this);
         playerBoardPosition = 1;
+        //GameManager.instance.AddAndInitializePlayerState(this, playerID);
     }
 
     void Start()
@@ -64,12 +105,12 @@ public class Player : MonoBehaviour
     //    currentState.StartTurn();
     //}
 
-    //public void EndTurn()
-    //{
-    //    currentState.EndTurn();
-    //}
+    public void EndTurn()
+    {
+        currentState.EndTurn();
+    }
 
-    public void HandleInput(int diceValue)
+    public void HandleInput()
     {
         currentState.HandleInput();
     }
@@ -82,5 +123,10 @@ public class Player : MonoBehaviour
     public int GetCurrentPosition()
     {
         return playerBoardPosition;
+    }
+
+    public ushort GetPlayerID()
+    {
+        return playerID;
     }
 }

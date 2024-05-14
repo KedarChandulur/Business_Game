@@ -4,6 +4,23 @@ public class StartTile : Square
 {
     private static readonly long startAmount = 250000;
 
+    private void Awake()
+    {
+        base.Setup();
+        GameManager.OnPlayerInit += OnPlayerInit;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnPlayerInit -= OnPlayerInit;
+    }
+
+    public void OnPlayerInit(Player player)
+    {
+        HighlightPlayersPosition(player);
+    }
+
+
     public override void ProcessPlayer(int diceValue, Player player)
     {
         // Get Money.
@@ -16,7 +33,7 @@ public class StartTile : Square
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

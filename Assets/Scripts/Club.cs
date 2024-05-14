@@ -2,37 +2,25 @@ using UnityEngine;
 
 public class Club : Square
 {
+    private static readonly long entryAmount = 350000;
+
+    private void Awake()
+    {
+        base.Setup();
+    }
+
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        // Pay Money.
-
-        //Type type = (Type)diceValue;
-
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        Debug.Log("Club amount of 350000 to the player.");
+        player.DebitAmount(entryAmount);
+        GameManager.instance.GetBanker().CreditAmount(entryAmount);
     }
 
     public override void SetType(uint index, uint objectID)
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

@@ -2,37 +2,25 @@ using UnityEngine;
 
 public class RestHouse : Square
 {
+    private static readonly long rentAmount = 150000;
+
+    private void Awake()
+    {
+        base.Setup();
+    }
+
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        // Pay Money.
-
-        //Type type = (Type)diceValue;
-
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        Debug.Log("Rent of 150000 from the player.");
+        player.DebitAmount(rentAmount);
+        GameManager.instance.GetBanker().CreditAmount(rentAmount);
     }
 
     public override void SetType(uint index, uint objectID)
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     private TMPro.TextMeshProUGUI player3_Balance;
     private TMPro.TextMeshProUGUI player4_Balance;
     private TMPro.TextMeshProUGUI diceNumber;
+    private TMPro.TextMeshProUGUI diceTitle;
 
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour
         SetupBalance(3, ref player3_Balance);
         SetupBalance(4, ref player4_Balance);
         SetupBalance(5, ref diceNumber);
+        SetDiceTitle(5, ref diceTitle);
 
         SetupPlayerName(1);
         SetupPlayerName(2);
@@ -36,18 +38,23 @@ public class UIManager : MonoBehaviour
 
         Player.OnPlayerMoneyChanged += OnPlayersMoneyChanged;
         Banker.OnBankerMoneyChanged += OnBankersMoneyChanged;
+        GameManager.OnPlayerInit += OnPlayerInit;
     }
 
     private void Start()
     {
         Dice.OnDiceRolled += OnDiceRolled;
+        GameManager.OnNextPlayerTurn += OnNextPlayerTurn;
     }
 
     private void OnDestroy()
     {
         Player.OnPlayerMoneyChanged -= OnPlayersMoneyChanged;
         Banker.OnBankerMoneyChanged -= OnBankersMoneyChanged;
+        GameManager.OnPlayerInit -= OnPlayerInit;
+
         Dice.OnDiceRolled -= OnDiceRolled;
+        GameManager.OnNextPlayerTurn -= OnNextPlayerTurn;
     }
 
     private void SetupPlayerBackground(int playerIndex)
@@ -67,6 +74,25 @@ public class UIManager : MonoBehaviour
         }
 
         output.color = player.GetPlayerColor();
+    }
+
+    private void SetDiceTitle(int childIndex, ref TMPro.TextMeshProUGUI output)
+    {
+        Transform temporary = transform.GetChild(childIndex);
+
+        if (temporary.childCount < 2)
+        {
+            Debug.LogError("Did you setup the UI correctly?");
+            Utilities.QuitPlayModeInEditor();
+        }
+
+        temporary = temporary.GetChild(0);
+
+        if (!temporary.TryGetComponent<TMPro.TextMeshProUGUI>(out output))
+        {
+            Debug.LogError("Error setting up the UI.");
+            Utilities.QuitPlayModeInEditor();
+        }
     }
 
     private void SetupPlayerName(int childIndex)
@@ -144,5 +170,18 @@ public class UIManager : MonoBehaviour
     private void OnDiceRolled(int diceValue)
     {
         diceNumber.text = "Number: " + diceValue.ToString();
+    }
+
+    public void OnPlayerInit(Player player)
+    {
+        if(player != null && player.GetPlayerID() == 1)
+        { 
+            diceTitle.color = player.GetPlayerColor();
+        }
+    }
+
+    public void OnNextPlayerTurn(UnityEngine.Color playerColor)
+    {
+        diceTitle.color = playerColor;
     }
 }

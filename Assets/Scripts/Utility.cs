@@ -9,6 +9,8 @@ public class Utility : Square
         WaterWorks
     }
 
+    private long utilityAmount;
+
     [SerializeField]
     private Type type;
 
@@ -27,35 +29,34 @@ public class Utility : Square
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        // Pay/Get Money.
+        switch (type)
+        {
+            case Type.ElectricityCompany:
+                Debug.Log("Electricity utility of 1000000 from the player.");
+                utilityAmount = 100000;
+                player.DebitAmount(utilityAmount);
+                GameManager.instance.GetBanker().CreditAmount(utilityAmount);
+                break;
 
-        //Type type = (Type)diceValue;
+            case Type.WaterWorks:
+                Debug.Log("Water works utility of 350000 from the player.");
+                utilityAmount = 350000;
+                player.DebitAmount(utilityAmount);
+                GameManager.instance.GetBanker().CreditAmount(utilityAmount);
+                break;
 
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+            case Type.Uninitialized:
+            default:
+                Debug.LogError("Something went wrong with Tax Tile.");
+                break;
+        }
     }
 
     public override void SetType(uint index, uint objectID)
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

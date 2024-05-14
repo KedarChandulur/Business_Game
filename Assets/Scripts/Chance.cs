@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class Chance : Square
 {
+    public static System.Action<Player> OnSpecialPlayerJump;
+
+    private void Awake()
+    {
+        base.Setup();
+    }
+
     public enum Type
     {
         Uninitialized,
@@ -27,6 +34,7 @@ public class Chance : Square
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
                 break;
+
             case Type.Collect200000:
                 Debug.Log("Collecting 200000 from bank by the player.");
                 amount = 200000;
@@ -41,34 +49,43 @@ public class Chance : Square
                     GameManager.instance.GetBanker().DebitAmount(startAmount);
                 }
 
+                this.ResetSquare(player);
                 player.UpdateCurrentPositionDirectly(11);
-
+                OnSpecialPlayerJump?.Invoke(player);
                 break;
+
             case Type.Pay200000:
                 Debug.Log("Paying bank of 200000 by the player.");
                 amount = 200000;
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
                 break;
+
             case Type.Jail:
                 Debug.Log("Paying bank of 1000000 by the player.");
                 amount = 1000000;
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
+
+                this.ResetSquare(player);
                 player.UpdateCurrentPositionDirectly(10);
+                OnSpecialPlayerJump?.Invoke(player);
                 break;
+
             case Type.Collect300000:
                 Debug.Log("Collecting 300000 from bank by the player.");
                 amount = 300000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
                 break;
+
             case Type.Collect150000:
                 Debug.Log("Collecting 150000 from bank by the player.");
                 amount = 150000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
                 break;
+
             default:
                 Debug.LogError("Something went wrong with Community Chest Challenge.");
                 Utilities.QuitPlayModeInEditor();
@@ -80,7 +97,7 @@ public class Chance : Square
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

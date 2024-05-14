@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class Community_Chest : Square
 {
+    private void Awake()
+    {
+        base.Setup();
+    }
+
     public enum Type
     {
         Uninitialized,
@@ -67,7 +72,7 @@ public class Community_Chest : Square
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;

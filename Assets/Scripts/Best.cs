@@ -2,40 +2,28 @@ using UnityEngine;
 
 public class Best : Square
 {
+    private static readonly long amountClaimed = 135000;
+
+    private void Awake()
+    {
+        base.Setup();
+    }
+
     public override void ProcessPlayer(int diceValue, Player player)
     {
         // If you own best, rent is Rs.1350
         // Mortgage - 4750
-        
-        // Get Money.
 
-        //Type type = (Type)diceValue;
-
-        //switch (type)
-        //{
-        //    case Type.Pay50:
-        //        break;
-        //    case Type.Collect200:
-        //        break;
-        //    case Type.Pay100:
-        //        break;
-        //    case Type.Jail:
-        //        break;
-        //    case Type.Collect100:
-        //        break;
-        //    case Type.Collect50:
-        //        break;
-        //    default:
-        //        Debug.LogError("Something went wrong with Community Chest Challenge.");
-        //        break;
-        //}
+        Debug.Log("Best amount claim of 135000 to the player.");
+        player.CreditAmount(amountClaimed);
+        GameManager.instance.GetBanker().DebitAmount(amountClaimed);
     }
 
     public override void SetType(uint index, uint objectID)
     {
         base.SetType(index);
 
-        switch (base._pSquareType)
+        switch (base.SquareTypeEnum)
         {
             case SquareType.Corned:
                 break;
