@@ -11,5 +11,23 @@ public class Banker : MonoBehaviour
     {
         account.Initialize(initialAmount);
         OnBankerMoneyChanged?.Invoke(initialAmount);
+        GameManager.instance.InitializeBanker(this);
     }
+
+    public void DebitAmount(System.Int64 debitValue)
+    {
+        account.DebitAmount(debitValue);
+        OnBankerMoneyChanged?.Invoke(account.MoneyAvailable());
+    }
+
+    public void CreditAmount(System.Int64 creditValue)
+    {
+        account.CreditAmount(creditValue);
+        OnBankerMoneyChanged?.Invoke(account.MoneyAvailable());
+    }
+
+    //public System.Int64 MoneyAvailable()
+    //{
+    //    return account.MoneyAvailable();
+    //}
 }
