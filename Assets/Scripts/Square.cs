@@ -53,6 +53,11 @@ public abstract class Square : MonoBehaviour
         this._pSquareType = index > 0 ? SquareType.Non_Corned : SquareType.Corned;
     }
 
+    public uint GetObjectID() 
+    { 
+        return objectID;
+    }
+
     public abstract void SetType(uint index, uint objectID);
-    public abstract void WhatToDo(uint diceValue);
+    public abstract void ProcessPlayer(int diceValue, Player player);
 }
