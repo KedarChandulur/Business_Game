@@ -20,7 +20,7 @@ public class Dice : UnityEngine.MonoBehaviour
         }
 
         roll.onClick.RemoveAllListeners();
-        roll.onClick.AddListener(() => { int diceNumber = UnityEngine.Random.Range(1, 6); UnityEngine.Debug.Log(diceNumber); OnDiceRolled?.Invoke(diceNumber); } );
+        roll.onClick.AddListener(() => { int diceNumber = UnityEngine.Random.Range(1, 6); OnDiceRolled?.Invoke(diceNumber); } );
     }
 
     private void OnDestroy()
