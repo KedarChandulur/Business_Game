@@ -9,7 +9,7 @@ public class Tax : Square
         LuxuryTax,
     }
 
-    private static readonly long taxAmount = 200000;
+    private long taxAmount = 0;
 
     [SerializeField]
     private Type type;
@@ -32,10 +32,22 @@ public class Tax : Square
         switch (type)
         {
             case Type.IncomeTax:
-            case Type.LuxuryTax:
-                Debug.Log("Tax of 200000 to the player.");
+                taxAmount = player.MoneyAvailable() * 6 / 100;
+
+                Debug.LogError("Debitting taxAmount 6: " + taxAmount);
+
                 player.DebitAmount(taxAmount);
                 GameManager.instance.GetBanker().CreditAmount(taxAmount);
+
+                break;
+            case Type.LuxuryTax:
+                taxAmount = player.MoneyAvailable() * 10 / 100;
+
+                Debug.LogError("Debitting taxAmount 10: " + taxAmount);
+
+                player.DebitAmount(taxAmount);
+                GameManager.instance.GetBanker().CreditAmount(taxAmount);
+
                 break;
             case Type.Uninitialized:
             default:

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Best : Square
 {
-    private static readonly long amountClaimed = 135000;
+    private long amountClaimed = 135000;
 
     private void Awake()
     {
@@ -11,10 +11,19 @@ public class Best : Square
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        // If you own best, rent is Rs.1350
-        // Mortgage - 4750
+        // Claim 2500 even if you don't own anything, if you own 2500 will be multipled by no of properities.
 
-        Debug.Log("Best amount claim of 135000 to the player.");
+        Debug.Log("Claim 2500 even if you don't own anything, if you own 2500 will be multipled by no of properities.");
+
+        if(player.NumberOfProperitiesOwned() > 0)
+        {
+            amountClaimed = 2500 * player.NumberOfProperitiesOwned();
+        }
+        else
+        {
+            amountClaimed = 2500;
+        }
+
         player.CreditAmount(amountClaimed);
         GameManager.instance.GetBanker().DebitAmount(amountClaimed);
     }

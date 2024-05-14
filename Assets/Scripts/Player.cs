@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerSpecificData
+public class PlayerJailData
 {
     ushort turnsMissed = 0;
     bool isInJail = false;
@@ -44,30 +44,30 @@ public class Player : MonoBehaviour
     private Color playerBG_Color;
 
     public static System.Action<System.Int64, ushort> OnPlayerMoneyChanged;
-
+    public static System.Action<System.Int64, ushort> OnPlayerAssetMoneyChanged;
+    
     private readonly Account account = new Account();
     private const System.Int64 initialAmount = 100000;
+    private long assetMoney = 0;
 
     private int playerBoardPosition;
 
-    public PlayerSpecificData playerSpecificData = new PlayerSpecificData();
+    public PlayerJailData playerJailData = new PlayerJailData();
+    private ushort properitiesOwned = 0;
 
     [SerializeField]
     private ushort playerID = 0;
 
-    private IPlayerState currentState;
-
     private void Awake()
     {
-        currentState = new PlayerIdleState(this);
         playerBoardPosition = 1;
-        //GameManager.instance.AddAndInitializePlayerState(this, playerID);
     }
 
     void Start()
     {
         account.Initialize(initialAmount);
         OnPlayerMoneyChanged?.Invoke(initialAmount, playerID);
+        OnPlayerAssetMoneyChanged?.Invoke(assetMoney, playerID);
         GameManager.instance.AddAndInitializePlayerState(this, playerID);
     }
 
@@ -88,31 +88,9 @@ public class Player : MonoBehaviour
         OnPlayerMoneyChanged?.Invoke(account.MoneyAvailable(), playerID);
     }
 
-    //public System.Int64 MoneyAvailable()
-    //{
-    //    return account.MoneyAvailable();
-    //}
-
-    public void ChangeState(IPlayerState newState)
+    public System.Int64 MoneyAvailable()
     {
-        currentState.EndTurn();
-        currentState = newState;
-        currentState.StartTurn();
-    }
-
-    //public void StartTurn()
-    //{
-    //    currentState.StartTurn();
-    //}
-
-    public void EndTurn()
-    {
-        currentState.EndTurn();
-    }
-
-    public void HandleInput()
-    {
-        currentState.HandleInput();
+        return account.MoneyAvailable();
     }
 
     public void UpdateCurrentPositionDirectly(int position)
@@ -128,5 +106,31 @@ public class Player : MonoBehaviour
     public ushort GetPlayerID()
     {
         return playerID;
+    }
+
+    public void IncrementProperitiesOwned()
+    {
+        ++properitiesOwned;
+    }
+
+    public ushort NumberOfProperitiesOwned()
+    {
+        return properitiesOwned;
+    }
+
+    public long GetAssetMoney()
+    {
+        return assetMoney;
+    }
+    
+    public void IncrementAssetMoney(long amount)
+    {
+        assetMoney += amount;
+        OnPlayerAssetMoneyChanged?.Invoke(assetMoney, playerID);
+    }
+
+    public long GetFinalAmount()
+    {
+        return account.MoneyAvailable() + assetMoney;
     }
 }

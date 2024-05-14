@@ -33,22 +33,22 @@ public class Transportation : Square
         switch (type)
         {
             case Type.Railways:
-                Debug.Log("Railways Transport cost of 250000 from the player.");
-                transportAmount = 250000;
+                Debug.Log("Railways 5000 Transport cost from the player.");
+                transportAmount = 5000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
                 break;
 
             case Type.Airways:
-                Debug.Log("Airways Transport cost of 700000 from the player.");
-                transportAmount = 700000;
+                Debug.Log("Airways 25000 Transport cost from the player.");
+                transportAmount = 25000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
                 break;
 
             case Type.Motorboat:
-                Debug.Log("Motorboat Transport cost of 100000 from the player.");
-                transportAmount = 100000;
+                Debug.Log("Motorboat 2000 Transport cost from the player.");
+                transportAmount = 2000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
                 break;

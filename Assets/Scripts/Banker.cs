@@ -25,9 +25,4 @@ public class Banker : MonoBehaviour
         account.CreditAmount(creditValue);
         OnBankerMoneyChanged?.Invoke(account.MoneyAvailable());
     }
-
-    //public System.Int64 MoneyAvailable()
-    //{
-    //    return account.MoneyAvailable();
-    //}
 }

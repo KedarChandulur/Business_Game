@@ -51,8 +51,6 @@ public class BoardManager : MonoBehaviour
 
     private void OnDiceRolled(int diceValue)
     {
-        Debug.Log("Dice Value from BoardManager: " + diceValue);
-
         if(!GameManager.instance.GetCurrentPlayer(out Player player))
         {
             Debug.LogError("Couldn't get the current player from the Game Manager.");
@@ -60,8 +58,6 @@ public class BoardManager : MonoBehaviour
         }
 
         int playersCurrentPosition = player.GetCurrentPosition();
-
-        Debug.Log("Player: " + player.GetPlayerID() + " previous position: " + playersCurrentPosition);
 
         allSquares[playersCurrentPosition - 1].ResetSquare(player);
 
@@ -86,19 +82,17 @@ public class BoardManager : MonoBehaviour
             player.UpdateCurrentPositionDirectly(playersCurrentPosition);
         }
 
-        Debug.Log("Player: " + player.GetPlayerID() + " current position: " + playersCurrentPosition);
-
         Square playersCurrSquare = allSquares[playersCurrentPosition - 1];
 
         playersCurrSquare.HighlightPlayersPosition(player);
         playersCurrSquare.ProcessPlayer(diceValue, player);
 
-        // below does nothing rn.
-        player.HandleInput();
-        // below does nothing rn.
-        player.EndTurn();
+        Property property = playersCurrSquare as Property;
 
-        GameManager.instance.SwitchToNextPlayer();
+        if (property == null)
+        { 
+            GameManager.instance.SwitchToNextPlayer(); 
+        }
     }
 
     public void OnSpecialPlayerJump(Player player)

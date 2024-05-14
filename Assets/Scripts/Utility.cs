@@ -32,15 +32,37 @@ public class Utility : Square
         switch (type)
         {
             case Type.ElectricityCompany:
-                Debug.Log("Electricity utility of 1000000 from the player.");
-                utilityAmount = 100000;
+                Debug.Log("Electricity utility from the player.");
+
+                if(player.NumberOfProperitiesOwned() > 0)
+                { 
+                    utilityAmount = 10000 * player.NumberOfProperitiesOwned(); 
+                }
+                else
+                {
+                    utilityAmount = 0;
+                }
+
+                Debug.LogError("Debitting utilityAmount 10000: " + utilityAmount);
+
                 player.DebitAmount(utilityAmount);
                 GameManager.instance.GetBanker().CreditAmount(utilityAmount);
                 break;
 
             case Type.WaterWorks:
-                Debug.Log("Water works utility of 350000 from the player.");
-                utilityAmount = 350000;
+                Debug.Log("Water works utility from the player.");
+
+                if (player.NumberOfProperitiesOwned() > 0)
+                {
+                    utilityAmount = 3500 * player.NumberOfProperitiesOwned();
+                }
+                else
+                {
+                    utilityAmount = 0;
+                }
+
+                Debug.LogError("Debitting utilityAmount 3500: " + utilityAmount);
+
                 player.DebitAmount(utilityAmount);
                 GameManager.instance.GetBanker().CreditAmount(utilityAmount);
                 break;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StartTile : Square
 {
-    private static readonly long startAmount = 250000;
+    private static readonly long startAmount = 25000;
 
     private void Awake()
     {
@@ -24,7 +24,7 @@ public class StartTile : Square
     public override void ProcessPlayer(int diceValue, Player player)
     {
         // Get Money.
-        Debug.Log("Start crossed of 250000 amount given to the player.");
+        Debug.Log("Start crossed of 25000 amount given to the player.");
         player.CreditAmount(startAmount);
         GameManager.instance.GetBanker().DebitAmount(startAmount);
     }

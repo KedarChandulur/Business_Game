@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RestHouse : Square
 {
-    private static readonly long rentAmount = 150000;
+    private static readonly long rentAmount = 8000;
 
     private void Awake()
     {
@@ -11,7 +11,7 @@ public class RestHouse : Square
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        Debug.Log("Rent of 150000 from the player.");
+        Debug.Log("Rest house  rent of 8000 from the player.");
         player.DebitAmount(rentAmount);
         GameManager.instance.GetBanker().CreditAmount(rentAmount);
     }

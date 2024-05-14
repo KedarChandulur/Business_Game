@@ -12,12 +12,12 @@ public class Chance : Square
     public enum Type
     {
         Uninitialized,
-        Pay100000, // Pay Rs. 100000 to the bank.
-        Collect200000, // Advance to Delhi. If you pass Go, collect Rs. 250000.
-        Pay200000, // Pay Rs. 200000 for repairs to your property. If you don't have any properties that require repairs, you don't need to pay.
-        Jail, // Go directly to Jail. Do not pass Go, do not collect Rs. 250000.
-        Collect300000, // You have won a crossword competition. Collect Rs. 300000.
-        Collect150000, // Receive interest on your savings. Collect Rs. 150000.
+        Pay1000, // Pay Rs. 1000 to the bank.
+        Collect25000, // Advance to Delhi. If you pass Go, collect Rs. 25000.
+        Pay2000, // Pay Rs. 2000 for repairs to your property. If you don't have any properties that require repairs, you don't need to pay.
+        Jail, // Go directly to Jail. Do not pass Go, do not collect Rs. 25000.
+        Collect30000, // You have won a crossword competition. Collect Rs. 30000.
+        Collect_Interest, // Receive interest on your savings. Collect Rs. 150000.
     }
 
     private long amount;
@@ -28,16 +28,16 @@ public class Chance : Square
 
         switch (type)
         {
-            case Type.Pay100000:
-                Debug.Log("Paying bank of 100000 by the player.");
-                amount = 100000;
+            case Type.Pay1000:
+                Debug.Log("Pay Rs. 1000 to the bank.");
+                amount = 1000;
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
                 break;
 
-            case Type.Collect200000:
-                Debug.Log("Collecting 200000 from bank by the player.");
-                amount = 200000;
+            case Type.Collect25000:
+                Debug.Log("Advance to Delhi. If you pass Go, collect Rs. 25000.");
+                amount = 25000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
 
@@ -54,36 +54,41 @@ public class Chance : Square
                 OnSpecialPlayerJump?.Invoke(player);
                 break;
 
-            case Type.Pay200000:
-                Debug.Log("Paying bank of 200000 by the player.");
-                amount = 200000;
+            case Type.Pay2000:
+                Debug.Log("Pay Rs. 2000 for repairs to your property. If you don't have any properties that require repairs, you don't need to pay.");
+                if(player.NumberOfProperitiesOwned() > 0)
+                {
+                    amount = 2000 * player.NumberOfProperitiesOwned();
+                }
+                else
+                {
+                    amount = 0;
+                }
+
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
                 break;
 
             case Type.Jail:
-                Debug.Log("Paying bank of 1000000 by the player.");
-                amount = 1000000;
-                player.DebitAmount(amount);
-                GameManager.instance.GetBanker().CreditAmount(amount);
-
+                Debug.Log("Go directly to Jail. Do not pass Go, do not collect Rs. 25000.");
                 this.ResetSquare(player);
                 player.UpdateCurrentPositionDirectly(10);
                 OnSpecialPlayerJump?.Invoke(player);
                 break;
 
-            case Type.Collect300000:
-                Debug.Log("Collecting 300000 from bank by the player.");
-                amount = 300000;
+            case Type.Collect30000:
+                Debug.Log("You have won a crossword competition. Collect Rs. 30000.");
+                amount = 30000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
                 break;
 
-            case Type.Collect150000:
-                Debug.Log("Collecting 150000 from bank by the player.");
-                amount = 150000;
-                player.CreditAmount(amount);
-                GameManager.instance.GetBanker().DebitAmount(amount);
+            case Type.Collect_Interest:
+                Debug.Log("Receive interest on your savings. Collect Rs. 150000.");
+
+                long savingsInterest = player.MoneyAvailable() * 6 / 100;
+                player.CreditAmount(savingsInterest);
+                GameManager.instance.GetBanker().DebitAmount(savingsInterest);
                 break;
 
             default:

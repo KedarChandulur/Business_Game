@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Jail_JustVisit : Square
 {
-    private static readonly long amount = 1000000;
+    private static readonly long amount = 15000;
 
     private void Awake()
     {
@@ -11,11 +11,11 @@ public class Jail_JustVisit : Square
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        Debug.Log("Paying bank of 1000000 by the player.");
+        Debug.Log("Jail amount 15000 paid by the player.");
         player.DebitAmount(amount);
         GameManager.instance.GetBanker().CreditAmount(amount);
 
-        player.playerSpecificData.SetPlayerJailState(true);
+        player.playerJailData.SetPlayerJailState(true);
     }
 
     public override void SetType(uint index, uint objectID)

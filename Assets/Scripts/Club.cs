@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Club : Square
 {
-    private static readonly long entryAmount = 350000;
+    private static readonly long entryAmount = 3500;
 
     private void Awake()
     {
@@ -11,7 +11,7 @@ public class Club : Square
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        Debug.Log("Club amount of 350000 to the player.");
+        Debug.Log("Club amount of 3500 from the player.");
         player.DebitAmount(entryAmount);
         GameManager.instance.GetBanker().CreditAmount(entryAmount);
     }

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public static System.Action<Color> OnNextPlayerTurn;
     public static System.Action<Player> OnPlayerInit;
+    public static System.Action<Player> OnPlayerWin;
 
     private ushort currentPlayer = 0;
 
@@ -47,30 +48,9 @@ public class GameManager : MonoBehaviour
         if (playerID == 1)
         {
             currentPlayer = playerID;
-
-            player.ChangeState(new PlayerRollingDiceState(player));
-
         }
         
         OnPlayerInit?.Invoke(player);
-
-        //GameObject boardManager_GO = GameObject.FindGameObjectWithTag("BoardManager");
-
-        //if(boardManager_GO == null)
-        //{
-        //    Debug.LogError("Board Manager_GO not found.");
-        //    Utilities.QuitPlayModeInEditor();
-        //    return;
-        //}
-
-        //if(!boardManager_GO.TryGetComponent<BoardManager>(out BoardManager boardManager))
-        //{
-        //    Debug.LogError("Board Manager not found.");
-        //    Utilities.QuitPlayModeInEditor();
-        //    return;
-        //}
-
-        //boardManager.UpdatePlayerSquareOnInit(player);
     }
 
     public void InitializeBanker(Banker _banker)
@@ -100,56 +80,84 @@ public class GameManager : MonoBehaviour
     public void SwitchToNextPlayer()
     {
         bool allPlayersInJail = true;
+        bool gameOver = false;
 
         // Check if all the players are in jail.
         foreach(Player playerRef in players)
         {
-            if (!playerRef.playerSpecificData.IsInJail())
+            if (!playerRef.playerJailData.IsInJail())
             {
                 allPlayersInJail = false;
-                //break;
             }
             else
             {
-                playerRef.playerSpecificData.UpdateTurnsMissedCount();
+                playerRef.playerJailData.UpdateTurnsMissedCount();
+            }
+
+            if(playerRef.MoneyAvailable() < 0)
+            {
+                gameOver = true;
+                break;
             }
         }
 
-        if(allPlayersInJail)
+        if (!gameOver)
         {
-            Debug.LogError("All player in jail releasing all of them.");
-
-            foreach (Player playerRef in players)
+            if (allPlayersInJail)
             {
-                playerRef.playerSpecificData.SetPlayerJailState(false);
+                Debug.LogError("All player in jail releasing all of them.");
+
+                foreach (Player playerRef in players)
+                {
+                    playerRef.playerJailData.SetPlayerJailState(false);
+                }
             }
+            else
+            {
+                // First increment as we are going to next player.
+                if (++currentPlayer > 4)
+                {
+                    currentPlayer = 1;
+                }
+
+                while (true)
+                {
+                    if (players[currentPlayer - 1].playerJailData.IsInJail())
+                    {
+                        if (++currentPlayer > 4)
+                        {
+                            currentPlayer = 1;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            OnNextPlayerTurn.Invoke(players[currentPlayer - 1].GetPlayerColor());
         }
         else
         {
-            Debug.Log("Not all players are in jail not releasing the current.");
+            Player player = null;
 
-            // First increment as we are going to next player.
-            if (++currentPlayer > 4)
+            foreach (Player playerRef in players)
             {
-                currentPlayer = 1;
-            }
-
-            while (true)
-            {
-                if (players[currentPlayer - 1].playerSpecificData.IsInJail())
+                if(player)
                 {
-                    if (++currentPlayer > 4)
+                    if(playerRef.GetFinalAmount() > player.GetFinalAmount())
                     {
-                        currentPlayer = 1;
+                        player = playerRef;
                     }
                 }
                 else
                 {
-                    break;
+                    player = playerRef;
                 }
             }
-        }
 
-        OnNextPlayerTurn.Invoke(players[currentPlayer - 1].GetPlayerColor());
+            OnPlayerWin?.Invoke(player);
+        }
     }
 }
