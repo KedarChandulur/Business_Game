@@ -34,7 +34,7 @@ public class Utility : Square
             case Type.ElectricityCompany:
                 Debug.Log("Electricity utility from the player.");
 
-                if(player.NumberOfProperitiesOwned() > 0)
+                if (player.NumberOfProperitiesOwned() > 0)
                 { 
                     utilityAmount = 10000 * player.NumberOfProperitiesOwned(); 
                 }
@@ -43,7 +43,9 @@ public class Utility : Square
                     utilityAmount = 0;
                 }
 
-                Debug.LogError("Debitting utilityAmount 10000: " + utilityAmount);
+                Debug.Log("Debitting utilityAmount 10000: " + utilityAmount);
+
+                eventMessage = "Electricity Utility cost of Rs. " + utilityAmount;
 
                 player.DebitAmount(utilityAmount);
                 GameManager.instance.GetBanker().CreditAmount(utilityAmount);
@@ -61,7 +63,9 @@ public class Utility : Square
                     utilityAmount = 0;
                 }
 
-                Debug.LogError("Debitting utilityAmount 3500: " + utilityAmount);
+                Debug.Log("Debitting utilityAmount 3500: " + utilityAmount);
+
+                eventMessage = "Pay Rs. 3500 for water repairs to your property.";
 
                 player.DebitAmount(utilityAmount);
                 GameManager.instance.GetBanker().CreditAmount(utilityAmount);
@@ -72,23 +76,7 @@ public class Utility : Square
                 Debug.LogError("Something went wrong with Tax Tile.");
                 break;
         }
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

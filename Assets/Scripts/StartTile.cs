@@ -27,23 +27,9 @@ public class StartTile : Square
         Debug.Log("Start crossed of 25000 amount given to the player.");
         player.CreditAmount(startAmount);
         GameManager.instance.GetBanker().DebitAmount(startAmount);
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
+        eventMessage = "Start crossed, you receive Rs. 25000";
 
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

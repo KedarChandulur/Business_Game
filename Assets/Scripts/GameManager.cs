@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour
         return banker;
     }
 
+    public Player[] GetAllPlayers()
+    {
+        return players;
+    }
+
     public void SwitchToNextPlayer()
     {
         bool allPlayersInJail = true;

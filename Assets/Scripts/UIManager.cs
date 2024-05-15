@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -65,6 +67,8 @@ public class UIManager : MonoBehaviour
         GameManager.OnNextPlayerTurn += OnNextPlayerTurn;
         GameManager.OnPlayerWin += OnPlayerWin;
 
+        Square.OnPlayerProcessed += OnPlayerProcessed;
+
         statusText.text = string.Empty;
     }
 
@@ -74,11 +78,13 @@ public class UIManager : MonoBehaviour
         Banker.OnBankerMoneyChanged -= OnBankersMoneyChanged;
         GameManager.OnPlayerInit -= OnPlayerInit;
 
+        Player.OnPlayerAssetMoneyChanged -= OnPlayerAssetMoneyChanged;
+
         Dice.OnDiceRolled -= OnDiceRolled;
         GameManager.OnNextPlayerTurn -= OnNextPlayerTurn;
         GameManager.OnPlayerWin -= OnPlayerWin;
 
-        Player.OnPlayerAssetMoneyChanged -= OnPlayerAssetMoneyChanged;
+        Square.OnPlayerProcessed -= OnPlayerProcessed;
     }
 
     private void SetupPlayerBackground(int playerIndex)
@@ -316,6 +322,25 @@ public class UIManager : MonoBehaviour
 
     public void OnPlayerWin(Player player)
     {
+        statusText.color = player.GetPlayerColor();
         statusText.text = "Status: Player: " + player.GetPlayerID() + " Won! with the asset investment and savings combined: " + player.GetFinalAmount() + "\n Congratulations player: " + player.GetPlayerID();
     }
+
+    public void OnPlayerProcessed(string messsage, Color playerColor)
+    {
+        //StopAllCoroutines();
+
+        statusText.text = string.Empty;
+        statusText.color = playerColor;
+        statusText.text = "Status: " + messsage;
+
+        //StartCoroutine(OnPlayerProcessed_Coroutine(2f));
+    }
+
+    //IEnumerator OnPlayerProcessed_Coroutine(float seconds)
+    //{
+    //    yield return new WaitForSeconds(seconds);
+
+    //    statusText.text = string.Empty;
+    //}
 }

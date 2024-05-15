@@ -12,25 +12,12 @@ public class Club : Square
     public override void ProcessPlayer(int diceValue, Player player)
     {
         Debug.Log("Club amount of 3500 from the player.");
+
+        eventMessage = "You have paid Rs. 3500 for visiting a club.";
+
         player.DebitAmount(entryAmount);
         GameManager.instance.GetBanker().CreditAmount(entryAmount);
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

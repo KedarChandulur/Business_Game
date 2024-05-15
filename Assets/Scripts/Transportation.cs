@@ -34,6 +34,9 @@ public class Transportation : Square
         {
             case Type.Railways:
                 Debug.Log("Railways 5000 Transport cost from the player.");
+
+                eventMessage = "You have to pay Railways of Rs. 5000";
+
                 transportAmount = 5000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
@@ -41,6 +44,9 @@ public class Transportation : Square
 
             case Type.Airways:
                 Debug.Log("Airways 25000 Transport cost from the player.");
+
+                eventMessage = "You have to pay Airways of Rs. 25000";
+
                 transportAmount = 25000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
@@ -48,6 +54,9 @@ public class Transportation : Square
 
             case Type.Motorboat:
                 Debug.Log("Motorboat 2000 Transport cost from the player.");
+
+                eventMessage = "You have to pay Motorboat of Rs. 2000";
+
                 transportAmount = 2000;
                 player.DebitAmount(transportAmount);
                 GameManager.instance.GetBanker().CreditAmount(transportAmount);
@@ -58,23 +67,7 @@ public class Transportation : Square
                 Debug.LogError("Something went wrong with Tax Tile.");
                 break;
         }
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

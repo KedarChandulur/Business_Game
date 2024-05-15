@@ -41,11 +41,6 @@ public class Property : Square
 
     private readonly PropertyData propertyData = new PropertyData();
 
-    [SerializeField]
-    long rent = 0;
-    [SerializeField]
-    long buy = 0;
-
     public static System.Action<PropertyData> showBuyMenu;
     public static System.Action<PropertyData> showrentMenu;
 
@@ -67,21 +62,17 @@ public class Property : Square
 
         propertyData.propertyName = type.ToString();
 
-        buy = propertyData.buyAmount = GetBuyValue();
-        rent = propertyData.rentAmount = GetRentValue();
+        propertyData.buyAmount = GetBuyValue();
+        propertyData.rentAmount = GetRentValue();
         propertyData.bg = base.backgroundImage;
     }
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        // Pay/Get Money depending on the player.
         if (propertyData.isBuyable)
         {
-            //if(propertyData.buyAmount <= player.MoneyAvailable())
-            //{
-                propertyData.owner = player;
-                showBuyMenu?.Invoke(propertyData);
-            //}
+            propertyData.owner = player;
+            showBuyMenu?.Invoke(propertyData);
         }
         else
         {
@@ -236,23 +227,5 @@ public class Property : Square
         }
 
         return value;
-    }
-
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
     }
 }

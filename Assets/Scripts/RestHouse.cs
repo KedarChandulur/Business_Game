@@ -14,23 +14,9 @@ public class RestHouse : Square
         Debug.Log("Rest house  rent of 8000 from the player.");
         player.DebitAmount(rentAmount);
         GameManager.instance.GetBanker().CreditAmount(rentAmount);
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
+        eventMessage = "You have to pay rest house  rent of Rs. 8000";
 
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

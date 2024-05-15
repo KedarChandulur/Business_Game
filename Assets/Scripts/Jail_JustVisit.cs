@@ -16,23 +16,9 @@ public class Jail_JustVisit : Square
         GameManager.instance.GetBanker().CreditAmount(amount);
 
         player.playerJailData.SetPlayerJailState(true);
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
+        eventMessage = "You have paid Rs. 15000 for Bail.";
 
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

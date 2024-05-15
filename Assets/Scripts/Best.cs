@@ -26,23 +26,9 @@ public class Best : Square
 
         player.CreditAmount(amountClaimed);
         GameManager.instance.GetBanker().DebitAmount(amountClaimed);
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
+        eventMessage = "Claim 1250 even if you don't own any property, if you own any property you receive 2500 for every properity you own.";
 
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

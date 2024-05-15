@@ -34,7 +34,9 @@ public class Tax : Square
             case Type.IncomeTax:
                 taxAmount = player.MoneyAvailable() * 6 / 100;
 
-                Debug.LogError("Debitting taxAmount 6: " + taxAmount);
+                Debug.Log("IncomeTax 6: " + taxAmount);
+
+                eventMessage = "You have to pay Income tax of Rs. " + taxAmount;
 
                 player.DebitAmount(taxAmount);
                 GameManager.instance.GetBanker().CreditAmount(taxAmount);
@@ -43,7 +45,9 @@ public class Tax : Square
             case Type.LuxuryTax:
                 taxAmount = player.MoneyAvailable() * 10 / 100;
 
-                Debug.LogError("Debitting taxAmount 10: " + taxAmount);
+                Debug.Log("LuxuryTax 10: " + taxAmount);
+
+                eventMessage = "You have to pay Luxury tax of Rs. " + taxAmount;
 
                 player.DebitAmount(taxAmount);
                 GameManager.instance.GetBanker().CreditAmount(taxAmount);
@@ -54,23 +58,7 @@ public class Tax : Square
                 Debug.LogError("Something went wrong with Tax Tile.");
                 break;
         }
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

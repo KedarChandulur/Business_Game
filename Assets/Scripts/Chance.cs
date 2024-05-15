@@ -12,7 +12,7 @@ public class Chance : Square
     public enum Type
     {
         Uninitialized,
-        Pay1000, // Pay Rs. 1000 to the bank.
+        Pay1000, // Pay Rs. 1000 Rupees fine for failing to maintain traffic rules.
         Collect25000, // Advance to Delhi. If you pass Go, collect Rs. 25000.
         Pay2000, // Pay Rs. 2000 for repairs to your property. If you don't have any properties that require repairs, you don't need to pay.
         Jail, // Go directly to Jail. Do not pass Go, do not collect Rs. 25000.
@@ -21,22 +21,30 @@ public class Chance : Square
     }
 
     private long amount;
+    private Type type;
 
     public override void ProcessPlayer(int diceValue, Player player)
     {
-        Type type = (Type)diceValue;
+        type = (Type)diceValue;
+        eventMessage = string.Empty;
 
         switch (type)
         {
             case Type.Pay1000:
                 Debug.Log("Pay Rs. 1000 to the bank.");
+
+                eventMessage = "You has to pay Rs. 1000 Rupees fine for failing to maintain traffic rules.";
+
                 amount = 1000;
                 player.DebitAmount(amount);
                 GameManager.instance.GetBanker().CreditAmount(amount);
                 break;
 
             case Type.Collect25000:
-                Debug.Log("Advance to Delhi. If you pass Go, collect Rs. 25000.");
+                Debug.Log("Advance to Delhi. If you pass start, collect Rs. 25000.");
+
+                eventMessage = "Advance to Delhi. If you pass start, collect Rs. 25000.";
+
                 amount = 25000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
@@ -56,7 +64,10 @@ public class Chance : Square
 
             case Type.Pay2000:
                 Debug.Log("Pay Rs. 2000 for repairs to your property. If you don't have any properties that require repairs, you don't need to pay.");
-                if(player.NumberOfProperitiesOwned() > 0)
+
+                eventMessage = "Pay Rs. 2000 for repairs to your property.";
+
+                if (player.NumberOfProperitiesOwned() > 0)
                 {
                     amount = 2000 * player.NumberOfProperitiesOwned();
                 }
@@ -70,7 +81,10 @@ public class Chance : Square
                 break;
 
             case Type.Jail:
-                Debug.Log("Go directly to Jail. Do not pass Go, do not collect Rs. 25000.");
+                Debug.Log("Go directly to Jail. Even if you pass pass start, do not collect Rs. 25000.");
+
+                eventMessage = "Go directly to Jail. Even if you pass pass start, do not collect Rs. 25000.";
+
                 this.ResetSquare(player);
                 player.UpdateCurrentPositionDirectly(10);
                 OnSpecialPlayerJump?.Invoke(player);
@@ -78,6 +92,9 @@ public class Chance : Square
 
             case Type.Collect30000:
                 Debug.Log("You have won a crossword competition. Collect Rs. 30000.");
+
+                eventMessage = "You have won a crossword competition: Rs. 30000";
+
                 amount = 30000;
                 player.CreditAmount(amount);
                 GameManager.instance.GetBanker().DebitAmount(amount);
@@ -87,6 +104,9 @@ public class Chance : Square
                 Debug.Log("Receive interest on your savings. Collect Rs. 150000.");
 
                 long savingsInterest = player.MoneyAvailable() * 6 / 100;
+
+                eventMessage = " You will receive 6% interest on money savings: " + savingsInterest.ToString();
+
                 player.CreditAmount(savingsInterest);
                 GameManager.instance.GetBanker().DebitAmount(savingsInterest);
                 break;
@@ -96,23 +116,7 @@ public class Chance : Square
                 Utilities.QuitPlayModeInEditor();
                 break;
         }
-    }
 
-    public override void SetType(uint index, uint objectID)
-    {
-        base.SetType(index);
-
-        switch (base.SquareTypeEnum)
-        {
-            case SquareType.Corned:
-                break;
-            case SquareType.Non_Corned:
-                break;
-            case SquareType.UnInitialized:
-            default:
-                Debug.LogError("Something went wrong with instantiation.");
-                Utilities.QuitPlayModeInEditor();
-                break;
-        }
+        OnPlayerProcessed.Invoke(eventMessage, player.GetPlayerColor());
     }
 }

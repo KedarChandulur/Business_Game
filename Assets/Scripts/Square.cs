@@ -4,13 +4,6 @@ using UnityEngine.UI;
 
 public abstract class Square : MonoBehaviour
 {
-    public enum SquareType
-    {
-        UnInitialized,
-        Non_Corned,
-        Corned
-    }
-
     protected Image backgroundImage;
     protected TextMeshProUGUI squareName;
 
@@ -19,7 +12,8 @@ public abstract class Square : MonoBehaviour
     protected Image playerHighlightSquare3;
     protected Image playerHighlightSquare4;
 
-    public SquareType SquareTypeEnum { get; private set; }
+    public static System.Action<string, Color> OnPlayerProcessed;
+    protected string eventMessage = string.Empty;
 
     [SerializeField]
     protected uint objectID = 0;
@@ -107,18 +101,10 @@ public abstract class Square : MonoBehaviour
         }
     }
 
-    protected void SetType(uint index)
-    {
-        this.SquareTypeEnum = index > 0 ? SquareType.Non_Corned : SquareType.Corned;
-    }
-
     public uint GetObjectID() 
     { 
         return objectID;
     }
-
-    public abstract void SetType(uint index, uint objectID);
-    public abstract void ProcessPlayer(int diceValue, Player player);
 
     public void HighlightPlayersPosition(Player player)
     {
@@ -169,5 +155,5 @@ public abstract class Square : MonoBehaviour
         image.color = Color.grey;
     }
 
-    //public void
+    public abstract void ProcessPlayer(int diceValue, Player player);
 }
