@@ -1,7 +1,7 @@
 # Business_Game
 This is a University project. Course number - GAM 440(Games with a purpose)
 
-This project is a reference/built from the india of the old board based business game(specifically played india).
+This project is a reference/built from one of the old board based business game(specifically played india).
 
 Game engine used: Unity.
 Programming language used: C#
